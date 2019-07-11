@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>タスク管理アプリ</title>
+            <meta charset="utf-8">
+            <!-- CDN CSS(Karma CSS)
+            https://karmacss.com/en/latest/installation.html -->
+            <link rel="stylesheet" href="https://unpkg.com/karma-css@latest/dist/karma.min.css">
+
+            <!-- static配下のCSSファイルを参照 -->
+            <link rel="stylesheet"
+            href="{% static 'css/todo.css' %}" >
+    </head>
+    <body>
+        <!-- 固定枠 -->
+        <div class="container">
+            <h2>ToDoリスト</h2>
+            <!-- ToDoアプリ Post処理 -->
+            <form action="{% url 'add' %}" method="post">
+                {% csrf_token %}
+                <div class="text">
+                        {{ form.message }}
+                </div>
+
+                <!-- ToDo追加ボタン -->
+                <div class="form-group">
+                    <button type="submit" class="button">
+                        ToDo追加
+                    </button>
+                </div>
+            </form>
+
+            <!-- Todoリスト表示 -->
+            <table class="todo list table">
+                <tbody>
+                    <!-- for文回してtodoを取得、表示 -->
+                    {% for post in posts %}
+                        <tr>
+                            <td>
+                                <div class="message">{{ post.message }}</div>
+                                <div>{{ post.created_date }}</div>
+                            </td>
+                            <td>
+                                <form action="{% url 'delete' post.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="button del">削除</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
